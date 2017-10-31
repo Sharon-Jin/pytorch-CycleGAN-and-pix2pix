@@ -5,6 +5,8 @@ import time
 from . import util
 from . import html
 from pdb import set_trace as st
+
+
 class Visualizer():
     def __init__(self, opt):
         # self.opt = opt
@@ -14,7 +16,7 @@ class Visualizer():
         self.name = opt.name
         if self.display_id > 0:
             import visdom
-            self.vis = visdom.Visdom(port = opt.display_port)
+            self.vis = visdom.Visdom(port = opt.display_port, env=self.name)
             self.display_single_pane_ncols = opt.display_single_pane_ncols
 
         if self.use_html:
