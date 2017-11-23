@@ -24,5 +24,5 @@ class TrainOptions(BaseOptions):
         self.parser.add_argument('--lr_policy', type=str, default='lambda', help='learning rate policy: lambda|step|plateau')
         self.parser.add_argument('--lr_decay_iters', type=int, default=50, help='multiply by a gamma every lr_decay_iters iterations')
         self.parser.add_argument('--identity', type=float, default=0.0, help='use identity mapping. Setting identity other than 1 has an effect of scaling the weight of the identity mapping loss. For example, if the weight of the identity loss should be 10 times smaller than the weight of the reconstruction loss, please set optidentity = 0.1')
-        self.parser.add_argument('--face_mask', type=bool, default=False, help='use segmentation masks for faces. Default path is maskA, maskB under same directory with trainA, trainB')
+        self.parser.add_argument('--face_mask', action='store_true', help='use segmentation masks for faces. Default path is maskA, maskB under same directory with trainA, trainB')
         self.isTrain = True

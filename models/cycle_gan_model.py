@@ -212,11 +212,18 @@ class CycleGANModel(BaseModel):
         real_B = util.tensor2im(self.real_B.data)
         fake_A = util.tensor2im(self.fake_A.data)
         rec_B = util.tensor2im(self.rec_B.data)
+        if self.opt.face_mask:
+            mask_A = util.tensor2im(self.A_mask.data)
+            mask_B = util.tensor2im(self.B_mask.data)
         if self.opt.isTrain and self.opt.identity > 0.0:
             idt_A = util.tensor2im(self.idt_A.data)
             idt_B = util.tensor2im(self.idt_B.data)
             return OrderedDict([('real_A', real_A), ('fake_B', fake_B), ('rec_A', rec_A), ('idt_B', idt_B),
                                 ('real_B', real_B), ('fake_A', fake_A), ('rec_B', rec_B), ('idt_A', idt_A)])
+        elif self.opt.face_mask:
+            return OrderedDict([('real_A', real_A), ('fake_B', fake_B), ('rec_A', rec_A),
+                                ('real_B', real_B), ('fake_A', fake_A), ('rec_B', rec_B),
+                                ('mask_A', mask_A), ('mask_B', mask_B)])
         else:
             return OrderedDict([('real_A', real_A), ('fake_B', fake_B), ('rec_A', rec_A),
                                 ('real_B', real_B), ('fake_A', fake_A), ('rec_B', rec_B)])

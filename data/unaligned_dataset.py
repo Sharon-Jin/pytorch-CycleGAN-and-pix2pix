@@ -6,6 +6,8 @@ from PIL import Image
 import PIL
 import random
 import scipy.io as sio
+import numpy as np
+
 
 class UnalignedDataset(BaseDataset):
     def initialize(self, opt):
@@ -30,8 +32,8 @@ class UnalignedDataset(BaseDataset):
             self.A_mask_dir = os.path.join(opt.dataroot, 'maskA')
             self.B_mask_dir = os.path.join(opt.dataroot, 'maskB')
 
-            self.A_mask_paths = make_dataset(self.A_mask_dir)
-            self.B_mask_paths = make_dataset(self.B_mask_dir)
+            self.A_mask_paths = make_dataset(self.A_mask_dir, ext='mat')
+            self.B_mask_paths = make_dataset(self.B_mask_dir, ext='mat')
 
             self.A_mask_paths = sorted(self.A_mask_paths)
             self.B_mask_paths = sorted(self.B_mask_paths)
