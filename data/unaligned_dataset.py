@@ -56,10 +56,12 @@ class UnalignedDataset(BaseDataset):
             basename = os.path.basename(A_path)
             A_mask_path = os.path.join(self.A_mask_dir, os.path.splitext(basename)[0] + '.mat')
             A_mask = sio.loadmat(A_mask_path)['cdata']
-            # A_mask = np.asarray(A_mask)
-            A_mask = Image.fromarray(np.stack((A_mask,)*3), 'RGB')
+            A_mask = A_mask/15.0*225.
+            A_mask = Image.fromarray(A_mask).convert('RGB')
+            # print('-->', A_mask.getcolors())
             random.seed(seed)
             A_mask = self.mask_transform(A_mask)
+            A_mask = A_mask * (self.opt.face_weight-1) + 1
         else:
             A_mask = None
 
@@ -70,10 +72,12 @@ class UnalignedDataset(BaseDataset):
             basename = os.path.basename(B_path)
             B_mask_path = os.path.join(self.B_mask_dir, os.path.splitext(basename)[0] + '.mat')
             B_mask = sio.loadmat(B_mask_path)['cdata']
-            #B_mask = np.asarray(B_mask)
-            B_mask = Image.fromarray(np.stack((B_mask, )*3), 'RGB')
+            B_mask = B_mask/15.0*225.
+            B_mask = Image.fromarray(B_mask).convert('RGB')
+            # print('-->', A_mask.getcolors())
             random.seed(seed)
             B_mask = self.mask_transform(B_mask)
+            B_mask = B_mask * (self.opt.face_weight-1) + 1.
         else:
             B_mask = None
 

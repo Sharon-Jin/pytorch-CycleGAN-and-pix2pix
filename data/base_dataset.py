@@ -37,9 +37,7 @@ def get_transform(opt, mask=False):
                                                (0.5, 0.5, 0.5))]
     else:
         # label of person. 15 in (0, 15)
-        transform_list += [transforms.ToTensor(),
-                           transforms.Normalize((-15, -15, -15), 
-                                                (15, 15, 15))]
+        transform_list += [transforms.ToTensor()]
     return transforms.Compose(transform_list)
 
 def __scale_width(img, target_width):

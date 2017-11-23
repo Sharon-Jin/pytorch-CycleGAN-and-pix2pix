@@ -16,11 +16,12 @@ def tensor2im(image_tensor, imtype=np.uint8):
     image_numpy = (np.transpose(image_numpy, (1, 2, 0)) + 1) / 2.0 * 255.0
     return image_numpy.astype(imtype)
 
-def mask2im(image_tensor, imtype=np.uint8):
+def mask2im(image_tensor, face_weight, imtype=np.uint8):
     image_numpy = image_tensor[0].cpu().float().numpy()
+    # print(np.min(image_numpy),np.max(image_numpy))  # check weight range
     if image_numpy.shape[0] == 1:
         image_numpy = np.tile(image_numpy, (3, 1, 1))
-    image_numpy = (np.transpose(image_numpy, (1, 2, 0)) - 1) * 255.0
+    image_numpy = (np.transpose(image_numpy, (1, 2, 0)) - 1) / (face_weight-1) * 255.0
     return image_numpy.astype(imtype)
 
 
