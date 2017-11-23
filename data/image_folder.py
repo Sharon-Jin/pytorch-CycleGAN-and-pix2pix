@@ -30,7 +30,6 @@ def make_dataset(dir, ext=None):
             if is_image_file(fname) and (ext==None or ext==fname.split(".")[-1]):
 		fpath = os.path.join(root, fname)
                 images.append(fpath)
-
     return images
 
 

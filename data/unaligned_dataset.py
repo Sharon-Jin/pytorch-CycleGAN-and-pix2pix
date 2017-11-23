@@ -32,13 +32,13 @@ class UnalignedDataset(BaseDataset):
             self.A_mask_dir = os.path.join(opt.dataroot, 'maskA')
             self.B_mask_dir = os.path.join(opt.dataroot, 'maskB')
 
-            self.A_mask_paths = make_dataset(self.A_mask_dir, ext='mat')
-            self.B_mask_paths = make_dataset(self.B_mask_dir, ext='mat')
+            #self.A_mask_paths = make_dataset(self.A_mask_dir, ext='mat')
+            #self.B_mask_paths = make_dataset(self.B_mask_dir, ext='mat')
 
-            self.A_mask_paths = sorted(self.A_mask_paths)
-            self.B_mask_paths = sorted(self.B_mask_paths)
+            #self.A_mask_paths = sorted(self.A_mask_paths)
+            #self.B_mask_paths = sorted(self.B_mask_paths)
 
-            self.mask_transform = get_transform(opt, channel=1)
+            self.mask_transform = get_transform(opt, mask=True)
 
     def __getitem__(self, index):
         A_path = self.A_paths[index % self.A_size]
@@ -53,8 +53,11 @@ class UnalignedDataset(BaseDataset):
         random.seed(seed)
         A = self.transform(A_img)
         if self.face_mask:
-            A_mask_path = self.A_mask_paths[index_A]
+            basename = os.path.basename(A_path)
+            A_mask_path = os.path.join(self.A_mask_dir, os.path.splitext(basename)[0] + '.mat')
             A_mask = sio.loadmat(A_mask_path)['cdata']
+            # A_mask = np.asarray(A_mask)
+            A_mask = Image.fromarray(np.stack((A_mask,)*3), 'RGB')
             random.seed(seed)
             A_mask = self.mask_transform(A_mask)
         else:
@@ -64,8 +67,11 @@ class UnalignedDataset(BaseDataset):
         random.seed(seed)
         B = self.transform(B_img)
         if self.face_mask:
-            B_mask_path = self.B_mask_paths[index_B]
+            basename = os.path.basename(B_path)
+            B_mask_path = os.path.join(self.B_mask_dir, os.path.splitext(basename)[0] + '.mat')
             B_mask = sio.loadmat(B_mask_path)['cdata']
+            #B_mask = np.asarray(B_mask)
+            B_mask = Image.fromarray(np.stack((B_mask, )*3), 'RGB')
             random.seed(seed)
             B_mask = self.mask_transform(B_mask)
         else:

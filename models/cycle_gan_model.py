@@ -22,6 +22,8 @@ class CycleGANModel(BaseModel):
         size = opt.fineSize
         self.input_A = self.Tensor(nb, opt.input_nc, size, size)
         self.input_B = self.Tensor(nb, opt.output_nc, size, size)
+	self.A_mask = self.Tensor(nb, opt.input_nc, size, size)
+	self.B_mask = self.Tensor(nb, opt.input_nc, size, size)
 
         # load/define networks
         # The naming conversion is different from those used in the paper
@@ -89,8 +91,6 @@ class CycleGANModel(BaseModel):
             B_mask = input['B_mask']
             self.A_mask.resize_(A_mask.size()).copy_(A_mask)
             self.B_mask.resize_(B_mask.size()).copy_(B_mask)
-            self.A_mask = Variable(self.A_mask)
-            self.B_mask = Variable(self.B_mask)
 
     def forward(self):
         self.real_A = Variable(self.input_A)
