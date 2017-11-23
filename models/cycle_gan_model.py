@@ -213,8 +213,8 @@ class CycleGANModel(BaseModel):
         fake_A = util.tensor2im(self.fake_A.data)
         rec_B = util.tensor2im(self.rec_B.data)
         if self.opt.face_mask:
-            mask_A = util.tensor2im(self.A_mask.data)
-            mask_B = util.tensor2im(self.B_mask.data)
+            mask_A = util.mask2im(Variable(self.A_mask).data)
+            mask_B = util.mask2im(Variable(self.B_mask).data)
         if self.opt.isTrain and self.opt.identity > 0.0:
             idt_A = util.tensor2im(self.idt_A.data)
             idt_B = util.tensor2im(self.idt_B.data)
