@@ -84,6 +84,13 @@ class CycleGANModel(BaseModel):
         self.input_A.resize_(input_A.size()).copy_(input_A)
         self.input_B.resize_(input_B.size()).copy_(input_B)
         self.image_paths = input['A_paths' if AtoB else 'B_paths']
+        if self.opt.face_mask:
+            A_mask = input['A_mask']
+            B_mask = input['B_mask']
+            self.A_mask.resize_(A_mask.size()).copy_(A_mask)
+            self.B_mask.resize_(B_mask.size()).copy_(B_mask)
+            self.A_mask = Variable(self.A_mask)
+            self.B_mask = Variable(self.B_mask)
 
     def forward(self):
         self.real_A = Variable(self.input_A)
@@ -150,10 +157,18 @@ class CycleGANModel(BaseModel):
         self.loss_G_B = self.criterionGAN(pred_fake, True)
         # Forward cycle loss
         self.rec_A = self.netG_B.forward(self.fake_B)
-        self.loss_cycle_A = self.criterionCycle(self.rec_A, self.real_A) * lambda_A
+        if self.opt.face_mask:
+            self.loss_cycle_A = self.criterionCycle(self.rec_A, self.real_A) * lambda_A
+        else:
+            self.loss_cycle_A = ((self.rec_A - self.real_A).abs() * self.A_mask).mean() * lambda_A
+        
         # Backward cycle loss
         self.rec_B = self.netG_A.forward(self.fake_A)
-        self.loss_cycle_B = self.criterionCycle(self.rec_B, self.real_B) * lambda_B
+        if self.opt.face_mask:
+            self.loss_cycle_B = self.criterionCycle(self.rec_B, self.real_B) * lambda_B
+        else:
+            self.loss_cycle_B = ((self.rec_B - self.real_B).abs() * self.B_mask).mean() * lambda_B
+
         # combined loss
         self.loss_G = self.loss_G_A + self.loss_G_B + self.loss_cycle_A + self.loss_cycle_B + self.loss_idt_A + self.loss_idt_B
         self.loss_G.backward()

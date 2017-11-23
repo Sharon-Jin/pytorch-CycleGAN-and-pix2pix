@@ -12,7 +12,7 @@ class BaseDataset(data.Dataset):
     def initialize(self, opt):
         pass
 
-def get_transform(opt):
+def get_transform(opt, channel=3):
     transform_list = []
     if opt.resize_or_crop == 'resize_and_crop':
         osize = [opt.loadSize, opt.loadSize]
@@ -31,9 +31,14 @@ def get_transform(opt):
     if opt.isTrain and not opt.no_flip:
         transform_list.append(transforms.RandomHorizontalFlip())
 
-    transform_list += [transforms.ToTensor(),
-                       transforms.Normalize((0.5, 0.5, 0.5),
-                                            (0.5, 0.5, 0.5))]
+    if channel==3:
+        transform_list += [transforms.ToTensor(),
+                           transforms.Normalize((0.5, 0.5, 0.5),
+                                               (0.5, 0.5, 0.5))]
+    else:
+        # label of person. 15 in (0, 15)
+        transform_list += [transforms.ToTensor(),
+                           transforms.Normalize((-15), (15))]
     return transforms.Compose(transform_list)
 
 def __scale_width(img, target_width):
