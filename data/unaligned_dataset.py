@@ -44,7 +44,10 @@ class UnalignedDataset(BaseDataset):
         A_path = self.A_paths[index % self.A_size]
         index_A = index % self.A_size
         index_B = random.randint(0, self.B_size - 1)
-        B_path = self.B_paths[index_B]
+        if self.opt.phase=='train':
+            B_path = self.B_paths[index_B]
+        else:
+            B_path = self.B_paths[index % self.B_size]
         # print('(A, B) = (%d, %d)' % (index_A, index_B))
         A_img = Image.open(A_path).convert('RGB')
         B_img = Image.open(B_path).convert('RGB')
@@ -63,7 +66,7 @@ class UnalignedDataset(BaseDataset):
             A_mask = self.mask_transform(A_mask)
             A_mask = A_mask * (self.opt.face_weight-1) + 1
         else:
-            A_mask = None
+            A_mask = []
 
         seed = np.random.randint(2147483647) # make a seed with numpy generator 
         random.seed(seed)
@@ -79,7 +82,7 @@ class UnalignedDataset(BaseDataset):
             B_mask = self.mask_transform(B_mask)
             B_mask = B_mask * (self.opt.face_weight-1) + 1.
         else:
-            B_mask = None
+            B_mask = []
 
         if self.opt.which_direction == 'BtoA':
             input_nc = self.opt.output_nc

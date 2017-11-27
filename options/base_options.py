@@ -39,7 +39,8 @@ class BaseOptions():
         self.parser.add_argument('--resize_or_crop', type=str, default='resize_and_crop', help='scaling and cropping of images at load time [resize_and_crop|crop|scale_width|scale_width_and_crop]')
         self.parser.add_argument('--no_flip', action='store_true', help='if specified, do not flip the images for data augmentation')
         self.parser.add_argument('--init_type', type=str, default='xavier', help='network initialization [normal|xavier|kaiming|orthogonal]')
-
+	self.parser.add_argument('--face_mask', action='store_true', help='use segmentation masks for faces. Default path is maskA, maskB under same directory with trainA, trainB')
+        self.parser.add_argument('--face_weight', type=float, default=2.0, help='weights of the face mask. Weights of other parts = 1')
         self.initialized = True
 
     def parse(self):

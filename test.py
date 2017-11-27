@@ -14,6 +14,7 @@ opt.no_flip = True  # no flip
 
 data_loader = CreateDataLoader(opt)
 dataset = data_loader.load_data()
+print 'size of dataset: ',len(dataset)
 model = create_model(opt)
 visualizer = Visualizer(opt)
 # create website
@@ -21,8 +22,9 @@ web_dir = os.path.join(opt.results_dir, opt.name, '%s_%s' % (opt.phase, opt.whic
 webpage = html.HTML(web_dir, 'Experiment = %s, Phase = %s, Epoch = %s' % (opt.name, opt.phase, opt.which_epoch))
 # test
 for i, data in enumerate(dataset):
-    if i >= opt.how_many:
-        break
+    print i
+    #if i >= opt.how_many:
+    #    break
     model.set_input(data)
     model.test()
     visuals = model.get_current_visuals()
