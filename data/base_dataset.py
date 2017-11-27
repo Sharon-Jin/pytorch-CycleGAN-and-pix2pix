@@ -17,16 +17,25 @@ def get_transform(opt, mask=False):
     if opt.resize_or_crop == 'resize_and_crop':
         osize = [opt.loadSize, opt.loadSize]
         transform_list.append(transforms.Scale(osize, Image.BICUBIC))
-        transform_list.append(transforms.RandomCrop(opt.fineSize))
+        if opt.phase=='train':
+            transform_list.append(transforms.RandomCrop(opt.fineSize))
+        else:
+            transform_list.append(transforms.CenterCrop(opt.fineSize))
     elif opt.resize_or_crop == 'crop':
-        transform_list.append(transforms.RandomCrop(opt.fineSize))
+        if opt.phase=='train':
+            transform_list.append(transforms.RandomCrop(opt.fineSize))
+        else:
+            transform_list.append(transforms.CenterCrop(opt.fineSize))
     elif opt.resize_or_crop == 'scale_width':
         transform_list.append(transforms.Lambda(
             lambda img: __scale_width(img, opt.fineSize)))
     elif opt.resize_or_crop == 'scale_width_and_crop':
         transform_list.append(transforms.Lambda(
             lambda img: __scale_width(img, opt.loadSize)))
-        transform_list.append(transforms.RandomCrop(opt.fineSize))
+        if opt.phase=='train':
+            transform_list.append(transforms.RandomCrop(opt.fineSize))
+        else:
+            transform_list.append(transforms.CenterCrop(opt.fineSize))
 
     if opt.isTrain and not opt.no_flip:
         transform_list.append(transforms.RandomHorizontalFlip())

@@ -4,10 +4,10 @@ import cv2, os, sys, pdb, shutil
 import torch
 
 # configurations
-test_video_path = 'datasets/videos/test2.mp4'
-experiment_name = "3russ2jin"
-extract_folder = 'datasets/' + experiment_name
-epoch = 200
+test_video_path = 'datasets/videos/test2_mask.mp4'
+experiment_name = "3russ2jin_mask"
+extract_folder = 'datasets/' + "3russ2jin"
+epoch = 'latest'
 current_dir = os.getcwd()
 #
 
@@ -44,13 +44,13 @@ def main():
     os.system(extract_audio_command)
 
     # forward all the images
-    run_pytorch_command = ('python test.py --which_epoch %d --dataroot %s --name %s --model cycle_gan --phase test --serial_batches --which_direction BtoA' % (epoch, extract_folder, experiment_name))
+    run_pytorch_command = ('python test.py --which_epoch %s --dataroot %s --name %s --model cycle_gan --phase test --serial_batches --which_direction BtoA' % (epoch, extract_folder, experiment_name))
     os.system(run_pytorch_command)
     
     fake_folder = extract_folder + "_fake"
     mkdir_if_not_exist(fake_folder)
     # copy all the files from original result folder to _fake folder
-    copy_result_command = ("cp results/%s/test_%d/images/* %s" % (experiment_name, epoch, fake_folder))
+    copy_result_command = ("cp results/%s/test_%s/images/* %s" % (experiment_name, epoch, fake_folder))
     os.system(copy_result_command)
 
     extracted_files = [s for s in os.listdir(fake_folder) if s.endswith('_fake_A.png')]
