@@ -89,8 +89,8 @@ class CycleGANModel(BaseModel):
         if self.opt.face_mask:
             A_mask = input['A_mask']
             B_mask = input['B_mask']
-            self.A_mask.resize_(A_mask.size()).copy_(A_mask)
-            self.B_mask.resize_(B_mask.size()).copy_(B_mask)
+            self.A_mask = Variable(A_mask, requires_grad=False).cuda()
+            self.B_mask = Variable(B_mask, requires_grad=False).cuda()
 
     def forward(self):
         self.real_A = Variable(self.input_A)
@@ -213,8 +213,8 @@ class CycleGANModel(BaseModel):
         fake_A = util.tensor2im(self.fake_A.data)
         rec_B = util.tensor2im(self.rec_B.data)
         if self.opt.face_mask:
-            mask_A = util.mask2im(Variable(self.A_mask).data, face_weight=self.opt.face_weight)
-            mask_B = util.mask2im(Variable(self.B_mask).data, face_weight=self.opt.face_weight)
+            mask_A = util.mask2im(self.A_mask.data, face_weight=self.opt.face_weight)
+            mask_B = util.mask2im(self.B_mask.data, face_weight=self.opt.face_weight)
         if self.opt.isTrain and self.opt.identity > 0.0:
             idt_A = util.tensor2im(self.idt_A.data)
             idt_B = util.tensor2im(self.idt_B.data)

@@ -7,8 +7,8 @@
 # test3/4.MOV: shangxuan
 
 # configurations
-test_video_path = 'datasets/videos/test2.MOV'
-experiment_name = "3russ2jin"
+test_video_path = 'datasets/videos/test1.MOV'
+experiment_name = "2russ2qi_D5"
 epoch = 200
 #
 
