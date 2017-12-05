@@ -157,14 +157,14 @@ class CycleGANModel(BaseModel):
         self.loss_G_B = self.criterionGAN(pred_fake, True)
         # Forward cycle loss
         self.rec_A = self.netG_B.forward(self.fake_B)
-        if self.opt.face_mask:
+        if not self.opt.face_mask:
             self.loss_cycle_A = self.criterionCycle(self.rec_A, self.real_A) * lambda_A
         else:
             self.loss_cycle_A = ((self.rec_A - self.real_A).abs() * self.A_mask).mean() * lambda_A
         
         # Backward cycle loss
         self.rec_B = self.netG_A.forward(self.fake_A)
-        if self.opt.face_mask:
+        if not self.opt.face_mask:
             self.loss_cycle_B = self.criterionCycle(self.rec_B, self.real_B) * lambda_B
         else:
             self.loss_cycle_B = ((self.rec_B - self.real_B).abs() * self.B_mask).mean() * lambda_B
