@@ -41,6 +41,7 @@ class BaseOptions():
         self.parser.add_argument('--init_type', type=str, default='xavier', help='network initialization [normal|xavier|kaiming|orthogonal]')
 	self.parser.add_argument('--face_mask', action='store_true', help='use segmentation masks for faces. Default path is maskA, maskB under same directory with trainA, trainB')
         self.parser.add_argument('--face_weight', type=float, default=2.0, help='weights of the face mask. Weights of other parts = 1')
+	self.parser.add_argument('--wgan', action='store_true', help='use wgan loss')
         self.initialized = True
 
     def parse(self):
