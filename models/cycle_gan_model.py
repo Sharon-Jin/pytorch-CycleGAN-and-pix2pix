@@ -120,7 +120,7 @@ class CycleGANModel(BaseModel):
         if not self.opt.wgan:
  		loss_D = (loss_D_real + loss_D_fake) * 0.5
         else:
-		loss_D = pred_fake.mean() - pred_real.mean()
+		loss_D = -pred_fake.mean() + pred_real.mean()
 	# backward
         loss_D.backward()
 	if self.opt.wgan:
@@ -165,14 +165,14 @@ class CycleGANModel(BaseModel):
         if not self.opt.wgan:
 		self.loss_G_A = self.criterionGAN(pred_fake, True)
 	else:
-		self.loss_G_A = -pred_fake.mean()
+		self.loss_G_A = pred_fake.mean()
         # D_B(G_B(B))
         self.fake_A = self.netG_B.forward(self.real_B)
         pred_fake = self.netD_B.forward(self.fake_A)
 	if not self.opt.wgan:
 		self.loss_G_B = self.criterionGAN(pred_fake, True)
 	else:
-		self.loss_G_B = -pred_fake.mean()
+		self.loss_G_B = pred_fake.mean()
         # Forward cycle loss
         self.rec_A = self.netG_B.forward(self.fake_B)
         if not self.opt.face_mask:
